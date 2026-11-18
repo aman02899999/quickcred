@@ -1,0 +1,15 @@
+{
+  "name": "quickcred",
+  "private": true,
+  "packageManager": "pnpm@10.28.0",
+  "engines": { "node": ">=22" },
+  "scripts": {
+    "dev:web": "pnpm --filter @quickcred/web dev",
+    "dev:api": "pnpm --filter @quickcred/api start:dev",
+    "build": "pnpm -r build",
+    "typecheck": "pnpm -r typecheck",
+    "test": "pnpm -r test",
+    "db:generate": "pnpm --filter @quickcred/db generate",
+    "db:migrate": "pnpm --filter @quickcred/db migrate"
+  }
+}

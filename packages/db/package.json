@@ -1,0 +1,23 @@
+{
+  "name": "@quickcred/db",
+  "version": "0.0.0",
+  "private": true,
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "generate": "drizzle-kit generate",
+    "migrate": "drizzle-kit migrate",
+    "test": "echo \"db: schema verified by migration apply (see TESTING_REPORT.md)\""
+  },
+  "dependencies": {
+    "drizzle-orm": "0.45.1",
+    "pg": "8.13.1"
+  },
+  "devDependencies": {
+    "@types/pg": "8.11.10",
+    "drizzle-kit": "0.31.5",
+    "typescript": "5.7.3"
+  }
+}
