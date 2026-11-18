@@ -1,0 +1,6336 @@
+{
+  "id": "c9be3fa0-3e06-46bf-aef4-d46bb840c755",
+  "prevId": "a4189228-eb4a-4193-a19b-979874774aff",
+  "version": "7",
+  "dialect": "postgresql",
+  "tables": {
+    "public.lenders": {
+      "name": "lenders",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "legal_name": {
+          "name": "legal_name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "brand_name": {
+          "name": "brand_name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "rbi_registration_no": {
+          "name": "rbi_registration_no",
+          "type": "varchar(64)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "entity_type": {
+          "name": "entity_type",
+          "type": "varchar(32)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "status": {
+          "name": "status",
+          "type": "lender_status",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'onboarding'"
+        },
+        "grievance_officer_name": {
+          "name": "grievance_officer_name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "grievance_officer_email": {
+          "name": "grievance_officer_email",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "grievance_officer_phone": {
+          "name": "grievance_officer_phone",
+          "type": "varchar(20)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "nodal_officer_details": {
+          "name": "nodal_officer_details",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "lsp_agreement_ref": {
+          "name": "lsp_agreement_ref",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "dlg_arrangement": {
+          "name": "dlg_arrangement",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "cims_dla_reported": {
+          "name": "cims_dla_reported",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "deleted_at": {
+          "name": "deleted_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "lenders_rbi_reg_uq": {
+          "name": "lenders_rbi_reg_uq",
+          "columns": [
+            {
+              "expression": "rbi_registration_no",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "with": {},
+          "method": "btree",
+          "concurrently": false
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.loan_products": {
+      "name": "loan_products",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "lender_id": {
+          "name": "lender_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "code": {
+          "name": "code",
+          "type": "varchar(40)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "repayment_type": {
+          "name": "repayment_type",
+          "type": "repayment_type",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'bullet'"
+        },
+        "tenure_days_min": {
+          "name": "tenure_days_min",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "tenure_days_max": {
+          "name": "tenure_days_max",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "amount_min": {
+          "name": "amount_min",
+          "type": "numeric(18, 2)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "amount_max": {
+          "name": "amount_max",
+          "type": "numeric(18, 2)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "annual_interest_rate": {
+          "name": "annual_interest_rate",
+          "type": "numeric(12, 8)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "processing_fee_rate": {
+          "name": "processing_fee_rate",
+          "type": "numeric(12, 8)",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'0'"
+        },
+        "processing_fee_flat": {
+          "name": "processing_fee_flat",
+          "type": "numeric(18, 2)",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'0'"
+        },
+        "gst_rate": {
+          "name": "gst_rate",
+          "type": "numeric(12, 8)",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'0.18'"
+        },
+        "penal_charge_per_day": {
+          "name": "penal_charge_per_day",
+          "type": "numeric(18, 2)",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'0'"
+        },
+        "cooling_off_days": {
+          "name": "cooling_off_days",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 3
+        },
+        "instalment_frequency_days": {
+          "name": "instalment_frequency_days",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "apr_ceiling": {
+          "name": "apr_ceiling",
+          "type": "numeric(12, 8)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "version": {
+          "name": "version",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 1
+        },
+        "is_active": {
+          "name": "is_active",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "approved_by_lender_ref": {
+          "name": "approved_by_lender_ref",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "loan_products_lender_code_ver_uq": {
+          "name": "loan_products_lender_code_ver_uq",
+          "columns": [
+            {
+              "expression": "lender_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "code",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "version",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "with": {},
+          "method": "btree",
+          "concurrently": false
+        },
+        "loan_products_lender_idx": {
+          "name": "loan_products_lender_idx",
+          "columns": [
+            {
+              "expression": "lender_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "with": {},
+          "method": "btree",
+          "concurrently": false
+        }
+      },
+      "foreignKeys": {
+        "loan_products_lender_id_lenders_id_fk": {
+          "name": "loan_products_lender_id_lenders_id_fk",
+          "tableFrom": "loan_products",
+          "columnsFrom": [
+            "lender_id"
+          ],
+          "tableTo": "lenders",
+          "columnsTo": [
+            "id"
+          ],
+          "onUpdate": "no action",
+          "onDelete": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {
+        "loan_products_tenure_chk": {
+          "name": "loan_products_tenure_chk",
+          "value": "\"loan_products\".\"tenure_days_min\" > 0 AND \"loan_products\".\"tenure_days_max\" >= \"loan_products\".\"tenure_days_min\""
+        },
+        "loan_products_amount_chk": {
+          "name": "loan_products_amount_chk",
+          "value": "\"loan_products\".\"amount_min\" > 0 AND \"loan_products\".\"amount_max\" >= \"loan_products\".\"amount_min\""
+        },
+        "loan_products_cooling_off_chk": {
+          "name": "loan_products_cooling_off_chk",
+          "value": "\"loan_products\".\"cooling_off_days\" >= 1"
+        }
+      },
+      "isRLSEnabled": false
+    },
+    "public.consent_records": {
+      "name": "consent_records",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "lender_id": {
+          "name": "lender_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "application_id": {
+          "name": "application_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "purpose": {
+          "name": "purpose",
+          "type": "consent_purpose",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "status": {
+          "name": "status",
+          "type": "consent_status",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "notice_version": {
+          "name": "notice_version",
+          "type": "varchar(32)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "notice_hash": {
+          "name": "notice_hash",
+          "type": "varchar(64)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "language": {
+          "name": "language",
+          "type": "varchar(8)",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'en'"
+        },
+        "ip": {
+          "name": "ip",
+          "type": "inet",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "device_id": {
+          "name": "device_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "expires_at": {
+          "name": "expires_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "consent_user_purpose_idx": {
+          "name": "consent_user_purpose_idx",
+          "columns": [
+            {
+              "expression": "user_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "purpose",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "created_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "with": {},
+          "method": "btree",
+          "concurrently": false
+        }
+      },
+      "foreignKeys": {
+        "consent_records_user_id_users_id_fk": {
+          "name": "consent_records_user_id_users_id_fk",
+          "tableFrom": "consent_records",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "tableTo": "users",
+          "columnsTo": [
+            "id"
+          ],
+          "onUpdate": "no action",
+          "onDelete": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.devices": {
+      "name": "devices",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "fingerprint_hash": {
+          "name": "fingerprint_hash",
+          "type": "varchar(64)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "platform": {
+          "name": "platform",
+          "type": "varchar(16)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "user_agent": {
+          "name": "user_agent",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "risk_flags": {
+          "name": "risk_flags",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "first_seen_at": {
+          "name": "first_seen_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "last_seen_at": {
+          "name": "last_seen_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "devices_fp_idx": {
+          "name": "devices_fp_idx",
+          "columns": [
+            {
+              "expression": "fingerprint_hash",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "with": {},
+          "method": "btree",
+          "concurrently": false
+        },
+        "devices_user_idx": {
+          "name": "devices_user_idx",
+          "columns": [
+            {
+              "expression": "user_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "with": {},
+          "method": "btree",
+          "concurrently": false
+        }
+      },
+      "foreignKeys": {
+        "devices_user_id_users_id_fk": {
+          "name": "devices_user_id_users_id_fk",
+          "tableFrom": "devices",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "tableTo": "users",
+          "columnsTo": [
+            "id"
+          ],
+          "onUpdate": "no action",
+          "onDelete": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.identity_verifications": {
+      "name": "identity_verifications",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "application_id": {
+          "name": "application_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "type": {
+          "name": "type",
+          "type": "verification_type",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "status": {
+          "name": "status",
+          "type": "verification_status",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'initiated'"
+        },
+        "provider": {
+          "name": "provider",
+          "type": "varchar(40)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "mode": {
+          "name": "mode",
+          "type": "integration_mode",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "is_mock": {
+          "name": "is_mock",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "provider_ref": {
+          "name": "provider_ref",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "name_match_score": {
+          "name": "name_match_score",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "dob_matched": {
+          "name": "dob_matched",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "failure_reason": {
+          "name": "failure_reason",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "response_enc": {
+          "name": "response_enc",
+          "type": "bytea",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "verified_at": {
+          "name": "verified_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "expires_at": {
+          "name": "expires_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "idv_user_type_idx": {
+          "name": "idv_user_type_idx",
+          "columns": [
+            {
+              "expression": "user_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "type",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "with": {},
+          "method": "btree",
+          "concurrently": false
+        },
+        "idv_application_idx": {
+          "name": "idv_application_idx",
+          "columns": [
+            {
+              "expression": "application_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "with": {},
+          "method": "btree",
+          "concurrently": false
+        }
+      },
+      "foreignKeys": {
+        "identity_verifications_user_id_users_id_fk": {
+          "name": "identity_verifications_user_id_users_id_fk",
+          "tableFrom": "identity_verifications",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "tableTo": "users",
+          "columnsTo": [
+            "id"
+          ],
+          "onUpdate": "no action",
+          "onDelete": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.otp_challenges": {
+      "name": "otp_challenges",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "phone_hash": {
+          "name": "phone_hash",
+          "type": "varchar(64)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "code_hash": {
+          "name": "code_hash",
+          "type": "varchar(128)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "purpose": {
+          "name": "purpose",
+          "type": "varchar(24)",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'login'"
+        },
+        "attempts": {
+          "name": "attempts",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "expires_at": {
+          "name": "expires_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "consumed_at": {
+          "name": "consumed_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "ip": {
+          "name": "ip",
+          "type": "inet",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "device_id": {
+          "name": "device_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "otp_phone_created_idx": {
+          "name": "otp_phone_created_idx",
+          "columns": [
+            {
+              "expression": "phone_hash",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "created_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "with": {},
+          "method": "btree",
+          "concurrently": false
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.user_profiles": {
+      "name": "user_profiles",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "full_name_enc": {
+          "name": "full_name_enc",
+          "type": "bytea",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "dob_enc": {
+          "name": "dob_enc",
+          "type": "bytea",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "email_enc": {
+          "name": "email_enc",
+          "type": "bytea",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "pan_enc": {
+          "name": "pan_enc",
+          "type": "bytea",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "pan_hash": {
+          "name": "pan_hash",
+          "type": "varchar(64)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "pan_last4": {
+          "name": "pan_last4",
+          "type": "varchar(4)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "aadhaar_last4": {
+          "name": "aadhaar_last4",
+          "type": "varchar(4)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "aadhaar_vault_ref": {
+          "name": "aadhaar_vault_ref",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "current_address_enc": {
+          "name": "current_address_enc",
+          "type": "bytea",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "permanent_address_enc": {
+          "name": "permanent_address_enc",
+          "type": "bytea",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "employment_type": {
+          "name": "employment_type",
+          "type": "employment_type",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "occupation": {
+          "name": "occupation",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "employer_name": {
+          "name": "employer_name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "monthly_income_declared": {
+          "name": "monthly_income_declared",
+          "type": "varchar(24)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "user_profiles_user_uq": {
+          "name": "user_profiles_user_uq",
+          "columns": [
+            {
+              "expression": "user_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "with": {},
+          "method": "btree",
+          "concurrently": false
+        },
+        "user_profiles_pan_hash_uq": {
+          "name": "user_profiles_pan_hash_uq",
+          "columns": [
+            {
+              "expression": "pan_hash",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "with": {},
+          "method": "btree",
+          "concurrently": false
+        }
+      },
+      "foreignKeys": {
+        "user_profiles_user_id_users_id_fk": {
+          "name": "user_profiles_user_id_users_id_fk",
+          "tableFrom": "user_profiles",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "tableTo": "users",
+          "columnsTo": [
+            "id"
+          ],
+          "onUpdate": "no action",
+          "onDelete": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.user_sessions": {
+      "name": "user_sessions",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "device_id": {
+          "name": "device_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "refresh_token_hash": {
+          "name": "refresh_token_hash",
+          "type": "varchar(128)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "ip": {
+          "name": "ip",
+          "type": "inet",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "expires_at": {
+          "name": "expires_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "revoked_at": {
+          "name": "revoked_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "user_sessions_refresh_uq": {
+          "name": "user_sessions_refresh_uq",
+          "columns": [
+            {
+              "expression": "refresh_token_hash",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "with": {},
+          "method": "btree",
+          "concurrently": false
+        },
+        "user_sessions_user_idx": {
+          "name": "user_sessions_user_idx",
+          "columns": [
+            {
+              "expression": "user_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "with": {},
+          "method": "btree",
+          "concurrently": false
+        }
+      },
+      "foreignKeys": {
+        "user_sessions_user_id_users_id_fk": {
+          "name": "user_sessions_user_id_users_id_fk",
+          "tableFrom": "user_sessions",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "tableTo": "users",
+          "columnsTo": [
+            "id"
+          ],
+          "onUpdate": "no action",
+          "onDelete": "no action"
+        },
+        "user_sessions_device_id_devices_id_fk": {
+          "name": "user_sessions_device_id_devices_id_fk",
+          "tableFrom": "user_sessions",
+          "columnsFrom": [
+            "device_id"
+          ],
+          "tableTo": "devices",
+          "columnsTo": [
+            "id"
+          ],
+          "onUpdate": "no action",
+          "onDelete": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.users": {
+      "name": "users",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "phone_enc": {
+          "name": "phone_enc",
+          "type": "bytea",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "phone_hash": {
+          "name": "phone_hash",
+          "type": "varchar(64)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "phone_last4": {
+          "name": "phone_last4",
+          "type": "varchar(4)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "status": {
+          "name": "status",
+          "type": "varchar(24)",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'active'"
+        },
+        "last_login_at": {
+          "name": "last_login_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "deleted_at": {
+          "name": "deleted_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "users_phone_hash_uq": {
+          "name": "users_phone_hash_uq",
+          "columns": [
+            {
+              "expression": "phone_hash",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "with": {},
+          "method": "btree",
+          "concurrently": false
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.aa_sessions": {
+      "name": "aa_sessions",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "application_id": {
+          "name": "application_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "lender_id": {
+          "name": "lender_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "provider": {
+          "name": "provider",
+          "type": "varchar(40)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "mode": {
+          "name": "mode",
+          "type": "integration_mode",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "is_mock": {
+          "name": "is_mock",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "consent_handle": {
+          "name": "consent_handle",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "consent_id": {
+          "name": "consent_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "status": {
+          "name": "status",
+          "type": "aa_consent_status",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'created'"
+        },
+        "fi_types": {
+          "name": "fi_types",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "data_range_from": {
+          "name": "data_range_from",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "data_range_to": {
+          "name": "data_range_to",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "consent_expires_at": {
+          "name": "consent_expires_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "data_fetched_at": {
+          "name": "data_fetched_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "purge_after": {
+          "name": "purge_after",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "aa_user_idx": {
+          "name": "aa_user_idx",
+          "columns": [
+            {
+              "expression": "user_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "with": {},
+          "method": "btree",
+          "concurrently": false
+        },
+        "aa_consent_handle_uq": {
+          "name": "aa_consent_handle_uq",
+          "columns": [
+            {
+              "expression": "consent_handle",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "with": {},
+          "method": "btree",
+          "concurrently": false
+        }
+      },
+      "foreignKeys": {
+        "aa_sessions_user_id_users_id_fk": {
+          "name": "aa_sessions_user_id_users_id_fk",
+          "tableFrom": "aa_sessions",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "tableTo": "users",
+          "columnsTo": [
+            "id"
+          ],
+          "onUpdate": "no action",
+          "onDelete": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.bank_accounts": {
+      "name": "bank_accounts",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "account_number_enc": {
+          "name": "account_number_enc",
+          "type": "bytea",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "account_number_hash": {
+          "name": "account_number_hash",
+          "type": "varchar(64)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "account_last4": {
+          "name": "account_last4",
+          "type": "varchar(4)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "ifsc": {
+          "name": "ifsc",
+          "type": "varchar(11)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "bank_name": {
+          "name": "bank_name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "holder_name_at_bank": {
+          "name": "holder_name_at_bank",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "name_match_score": {
+          "name": "name_match_score",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "verification_status": {
+          "name": "verification_status",
+          "type": "verification_status",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'initiated'"
+        },
+        "verification_method": {
+          "name": "verification_method",
+          "type": "varchar(32)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "is_mock_verified": {
+          "name": "is_mock_verified",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "is_primary": {
+          "name": "is_primary",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "verified_at": {
+          "name": "verified_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "bank_accounts_user_acct_uq": {
+          "name": "bank_accounts_user_acct_uq",
+          "columns": [
+            {
+              "expression": "user_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "account_number_hash",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "with": {},
+          "method": "btree",
+          "concurrently": false
+        },
+        "bank_accounts_acct_hash_idx": {
+          "name": "bank_accounts_acct_hash_idx",
+          "columns": [
+            {
+              "expression": "account_number_hash",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "with": {},
+          "method": "btree",
+          "concurrently": false
+        }
+      },
+      "foreignKeys": {
+        "bank_accounts_user_id_users_id_fk": {
+          "name": "bank_accounts_user_id_users_id_fk",
+          "tableFrom": "bank_accounts",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "tableTo": "users",
+          "columnsTo": [
+            "id"
+          ],
+          "onUpdate": "no action",
+          "onDelete": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.bank_analyses": {
+      "name": "bank_analyses",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "aa_session_id": {
+          "name": "aa_session_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "months_covered": {
+          "name": "months_covered",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "avg_monthly_credit": {
+          "name": "avg_monthly_credit",
+          "type": "numeric(18, 2)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "avg_monthly_debit": {
+          "name": "avg_monthly_debit",
+          "type": "numeric(18, 2)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "avg_balance": {
+          "name": "avg_balance",
+          "type": "numeric(18, 2)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "detected_salary": {
+          "name": "detected_salary",
+          "type": "numeric(18, 2)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "salary_regularity_score": {
+          "name": "salary_regularity_score",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "detected_emi_total": {
+          "name": "detected_emi_total",
+          "type": "numeric(18, 2)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "bounce_count": {
+          "name": "bounce_count",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "features": {
+          "name": "features",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "engine_version": {
+          "name": "engine_version",
+          "type": "varchar(24)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "is_mock": {
+          "name": "is_mock",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "bank_analyses_user_idx": {
+          "name": "bank_analyses_user_idx",
+          "columns": [
+            {
+              "expression": "user_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "with": {},
+          "method": "btree",
+          "concurrently": false
+        }
+      },
+      "foreignKeys": {
+        "bank_analyses_aa_session_id_aa_sessions_id_fk": {
+          "name": "bank_analyses_aa_session_id_aa_sessions_id_fk",
+          "tableFrom": "bank_analyses",
+          "columnsFrom": [
+            "aa_session_id"
+          ],
+          "tableTo": "aa_sessions",
+          "columnsTo": [
+            "id"
+          ],
+          "onUpdate": "no action",
+          "onDelete": "no action"
+        },
+        "bank_analyses_user_id_users_id_fk": {
+          "name": "bank_analyses_user_id_users_id_fk",
+          "tableFrom": "bank_analyses",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "tableTo": "users",
+          "columnsTo": [
+            "id"
+          ],
+          "onUpdate": "no action",
+          "onDelete": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.bank_transactions": {
+      "name": "bank_transactions",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "aa_session_id": {
+          "name": "aa_session_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "bank_account_id": {
+          "name": "bank_account_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "txn_date": {
+          "name": "txn_date",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "amount": {
+          "name": "amount",
+          "type": "numeric(18, 2)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "direction": {
+          "name": "direction",
+          "type": "varchar(6)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "balance_after": {
+          "name": "balance_after",
+          "type": "numeric(18, 2)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "mode": {
+          "name": "mode",
+          "type": "varchar(16)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "narration_enc": {
+          "name": "narration_enc",
+          "type": "bytea",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "category": {
+          "name": "category",
+          "type": "varchar(32)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "provider_txn_id": {
+          "name": "provider_txn_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "bank_txn_user_date_idx": {
+          "name": "bank_txn_user_date_idx",
+          "columns": [
+            {
+              "expression": "user_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "txn_date",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "with": {},
+          "method": "btree",
+          "concurrently": false
+        },
+        "bank_txn_session_idx": {
+          "name": "bank_txn_session_idx",
+          "columns": [
+            {
+              "expression": "aa_session_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "with": {},
+          "method": "btree",
+          "concurrently": false
+        }
+      },
+      "foreignKeys": {
+        "bank_transactions_aa_session_id_aa_sessions_id_fk": {
+          "name": "bank_transactions_aa_session_id_aa_sessions_id_fk",
+          "tableFrom": "bank_transactions",
+          "columnsFrom": [
+            "aa_session_id"
+          ],
+          "tableTo": "aa_sessions",
+          "columnsTo": [
+            "id"
+          ],
+          "onUpdate": "no action",
+          "onDelete": "no action"
+        },
+        "bank_transactions_bank_account_id_bank_accounts_id_fk": {
+          "name": "bank_transactions_bank_account_id_bank_accounts_id_fk",
+          "tableFrom": "bank_transactions",
+          "columnsFrom": [
+            "bank_account_id"
+          ],
+          "tableTo": "bank_accounts",
+          "columnsTo": [
+            "id"
+          ],
+          "onUpdate": "no action",
+          "onDelete": "no action"
+        },
+        "bank_transactions_user_id_users_id_fk": {
+          "name": "bank_transactions_user_id_users_id_fk",
+          "tableFrom": "bank_transactions",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "tableTo": "users",
+          "columnsTo": [
+            "id"
+          ],
+          "onUpdate": "no action",
+          "onDelete": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.credit_reports": {
+      "name": "credit_reports",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "application_id": {
+          "name": "application_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "lender_id": {
+          "name": "lender_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "bureau": {
+          "name": "bureau",
+          "type": "varchar(16)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "mode": {
+          "name": "mode",
+          "type": "integration_mode",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "is_mock": {
+          "name": "is_mock",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "consent_record_id": {
+          "name": "consent_record_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "enquiry_purpose": {
+          "name": "enquiry_purpose",
+          "type": "varchar(32)",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'personal_loan'"
+        },
+        "report_enc": {
+          "name": "report_enc",
+          "type": "bytea",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "status": {
+          "name": "status",
+          "type": "varchar(16)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "pulled_at": {
+          "name": "pulled_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "purge_after": {
+          "name": "purge_after",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "credit_reports_user_idx": {
+          "name": "credit_reports_user_idx",
+          "columns": [
+            {
+              "expression": "user_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "with": {},
+          "method": "btree",
+          "concurrently": false
+        },
+        "credit_reports_app_idx": {
+          "name": "credit_reports_app_idx",
+          "columns": [
+            {
+              "expression": "application_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "with": {},
+          "method": "btree",
+          "concurrently": false
+        }
+      },
+      "foreignKeys": {
+        "credit_reports_user_id_users_id_fk": {
+          "name": "credit_reports_user_id_users_id_fk",
+          "tableFrom": "credit_reports",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "tableTo": "users",
+          "columnsTo": [
+            "id"
+          ],
+          "onUpdate": "no action",
+          "onDelete": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.credit_scores": {
+      "name": "credit_scores",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "credit_report_id": {
+          "name": "credit_report_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "score": {
+          "name": "score",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "score_model": {
+          "name": "score_model",
+          "type": "varchar(32)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "active_accounts": {
+          "name": "active_accounts",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "total_outstanding": {
+          "name": "total_outstanding",
+          "type": "numeric(18, 2)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "monthly_obligation": {
+          "name": "monthly_obligation",
+          "type": "numeric(18, 2)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "overdue_accounts": {
+          "name": "overdue_accounts",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "max_dpd_12m": {
+          "name": "max_dpd_12m",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "enquiries_30d": {
+          "name": "enquiries_30d",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "enquiries_90d": {
+          "name": "enquiries_90d",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "written_off_or_settled": {
+          "name": "written_off_or_settled",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "credit_scores_user_idx": {
+          "name": "credit_scores_user_idx",
+          "columns": [
+            {
+              "expression": "user_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "with": {},
+          "method": "btree",
+          "concurrently": false
+        }
+      },
+      "foreignKeys": {
+        "credit_scores_credit_report_id_credit_reports_id_fk": {
+          "name": "credit_scores_credit_report_id_credit_reports_id_fk",
+          "tableFrom": "credit_scores",
+          "columnsFrom": [
+            "credit_report_id"
+          ],
+          "tableTo": "credit_reports",
+          "columnsTo": [
+            "id"
+          ],
+          "onUpdate": "no action",
+          "onDelete": "no action"
+        },
+        "credit_scores_user_id_users_id_fk": {
+          "name": "credit_scores_user_id_users_id_fk",
+          "tableFrom": "credit_scores",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "tableTo": "users",
+          "columnsTo": [
+            "id"
+          ],
+          "onUpdate": "no action",
+          "onDelete": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.fraud_assessments": {
+      "name": "fraud_assessments",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "application_id": {
+          "name": "application_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "score": {
+          "name": "score",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "signals": {
+          "name": "signals",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "hard_stop": {
+          "name": "hard_stop",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "reviewed_by": {
+          "name": "reviewed_by",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "review_outcome": {
+          "name": "review_outcome",
+          "type": "varchar(24)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "engine_version": {
+          "name": "engine_version",
+          "type": "varchar(24)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "fraud_app_idx": {
+          "name": "fraud_app_idx",
+          "columns": [
+            {
+              "expression": "application_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "with": {},
+          "method": "btree",
+          "concurrently": false
+        }
+      },
+      "foreignKeys": {
+        "fraud_assessments_user_id_users_id_fk": {
+          "name": "fraud_assessments_user_id_users_id_fk",
+          "tableFrom": "fraud_assessments",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "tableTo": "users",
+          "columnsTo": [
+            "id"
+          ],
+          "onUpdate": "no action",
+          "onDelete": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.underwriting_decisions": {
+      "name": "underwriting_decisions",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "application_id": {
+          "name": "application_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "lender_id": {
+          "name": "lender_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "policy_version": {
+          "name": "policy_version",
+          "type": "varchar(24)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "component_scores": {
+          "name": "component_scores",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "total_score": {
+          "name": "total_score",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "risk_band": {
+          "name": "risk_band",
+          "type": "risk_band",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "outcome": {
+          "name": "outcome",
+          "type": "decision_outcome",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "reason_codes": {
+          "name": "reason_codes",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "max_eligible_amount": {
+          "name": "max_eligible_amount",
+          "type": "numeric(18, 2)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "foir_computed": {
+          "name": "foir_computed",
+          "type": "numeric(12, 8)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "decided_by": {
+          "name": "decided_by",
+          "type": "varchar(16)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "staff_user_id": {
+          "name": "staff_user_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "override_reason": {
+          "name": "override_reason",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "uw_app_idx": {
+          "name": "uw_app_idx",
+          "columns": [
+            {
+              "expression": "application_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "with": {},
+          "method": "btree",
+          "concurrently": false
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.application_events": {
+      "name": "application_events",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "application_id": {
+          "name": "application_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "from_status": {
+          "name": "from_status",
+          "type": "application_status",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "to_status": {
+          "name": "to_status",
+          "type": "application_status",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "actor_type": {
+          "name": "actor_type",
+          "type": "actor_type",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "actor_id": {
+          "name": "actor_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "note": {
+          "name": "note",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "metadata": {
+          "name": "metadata",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "app_events_app_idx": {
+          "name": "app_events_app_idx",
+          "columns": [
+            {
+              "expression": "application_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "created_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "with": {},
+          "method": "btree",
+          "concurrently": false
+        }
+      },
+      "foreignKeys": {
+        "application_events_application_id_loan_applications_id_fk": {
+          "name": "application_events_application_id_loan_applications_id_fk",
+          "tableFrom": "application_events",
+          "columnsFrom": [
+            "application_id"
+          ],
+          "tableTo": "loan_applications",
+          "columnsTo": [
+            "id"
+          ],
+          "onUpdate": "no action",
+          "onDelete": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.disbursements": {
+      "name": "disbursements",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "loan_account_id": {
+          "name": "loan_account_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "lender_id": {
+          "name": "lender_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "beneficiary_account_id": {
+          "name": "beneficiary_account_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "amount": {
+          "name": "amount",
+          "type": "numeric(18, 2)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "status": {
+          "name": "status",
+          "type": "disbursement_status",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'requested'"
+        },
+        "idempotency_key": {
+          "name": "idempotency_key",
+          "type": "varchar(80)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "provider": {
+          "name": "provider",
+          "type": "varchar(32)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "mode": {
+          "name": "mode",
+          "type": "integration_mode",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "is_mock": {
+          "name": "is_mock",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "source_account_ref": {
+          "name": "source_account_ref",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "maker_id": {
+          "name": "maker_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "checker_id": {
+          "name": "checker_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "provider_ref": {
+          "name": "provider_ref",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "utr": {
+          "name": "utr",
+          "type": "varchar(40)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "failure_reason": {
+          "name": "failure_reason",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "attempts": {
+          "name": "attempts",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "submitted_at": {
+          "name": "submitted_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "completed_at": {
+          "name": "completed_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "disb_idem_uq": {
+          "name": "disb_idem_uq",
+          "columns": [
+            {
+              "expression": "idempotency_key",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "with": {},
+          "method": "btree",
+          "concurrently": false
+        },
+        "disb_one_live_per_loan_uq": {
+          "name": "disb_one_live_per_loan_uq",
+          "columns": [
+            {
+              "expression": "loan_account_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "with": {},
+          "method": "btree",
+          "where": "status NOT IN ('failed','reversed')",
+          "concurrently": false
+        }
+      },
+      "foreignKeys": {
+        "disbursements_loan_account_id_loan_accounts_id_fk": {
+          "name": "disbursements_loan_account_id_loan_accounts_id_fk",
+          "tableFrom": "disbursements",
+          "columnsFrom": [
+            "loan_account_id"
+          ],
+          "tableTo": "loan_accounts",
+          "columnsTo": [
+            "id"
+          ],
+          "onUpdate": "no action",
+          "onDelete": "no action"
+        },
+        "disbursements_lender_id_lenders_id_fk": {
+          "name": "disbursements_lender_id_lenders_id_fk",
+          "tableFrom": "disbursements",
+          "columnsFrom": [
+            "lender_id"
+          ],
+          "tableTo": "lenders",
+          "columnsTo": [
+            "id"
+          ],
+          "onUpdate": "no action",
+          "onDelete": "no action"
+        },
+        "disbursements_beneficiary_account_id_bank_accounts_id_fk": {
+          "name": "disbursements_beneficiary_account_id_bank_accounts_id_fk",
+          "tableFrom": "disbursements",
+          "columnsFrom": [
+            "beneficiary_account_id"
+          ],
+          "tableTo": "bank_accounts",
+          "columnsTo": [
+            "id"
+          ],
+          "onUpdate": "no action",
+          "onDelete": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {
+        "disb_maker_checker_chk": {
+          "name": "disb_maker_checker_chk",
+          "value": "\"disbursements\".\"checker_id\" IS NULL OR \"disbursements\".\"checker_id\" <> \"disbursements\".\"maker_id\""
+        },
+        "disb_amount_chk": {
+          "name": "disb_amount_chk",
+          "value": "\"disbursements\".\"amount\" > 0"
+        }
+      },
+      "isRLSEnabled": false
+    },
+    "public.loan_accounts": {
+      "name": "loan_accounts",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "loan_no": {
+          "name": "loan_no",
+          "type": "varchar(24)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "lender_id": {
+          "name": "lender_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "application_id": {
+          "name": "application_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "offer_id": {
+          "name": "offer_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "status": {
+          "name": "status",
+          "type": "loan_account_status",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'cooling_off'"
+        },
+        "principal": {
+          "name": "principal",
+          "type": "numeric(18, 2)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "annual_interest_rate": {
+          "name": "annual_interest_rate",
+          "type": "numeric(12, 8)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "apr": {
+          "name": "apr",
+          "type": "numeric(12, 8)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "disbursed_on": {
+          "name": "disbursed_on",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "maturity_date": {
+          "name": "maturity_date",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "cooling_off_ends_at": {
+          "name": "cooling_off_ends_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "principal_outstanding": {
+          "name": "principal_outstanding",
+          "type": "numeric(18, 2)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "interest_accrued": {
+          "name": "interest_accrued",
+          "type": "numeric(18, 2)",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'0'"
+        },
+        "fees_outstanding": {
+          "name": "fees_outstanding",
+          "type": "numeric(18, 2)",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'0'"
+        },
+        "penal_outstanding": {
+          "name": "penal_outstanding",
+          "type": "numeric(18, 2)",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'0'"
+        },
+        "dpd": {
+          "name": "dpd",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "closed_at": {
+          "name": "closed_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "version": {
+          "name": "version",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 1
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "loan_accounts_no_uq": {
+          "name": "loan_accounts_no_uq",
+          "columns": [
+            {
+              "expression": "loan_no",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "with": {},
+          "method": "btree",
+          "concurrently": false
+        },
+        "loan_accounts_app_uq": {
+          "name": "loan_accounts_app_uq",
+          "columns": [
+            {
+              "expression": "application_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "with": {},
+          "method": "btree",
+          "concurrently": false
+        },
+        "loan_accounts_lender_status_idx": {
+          "name": "loan_accounts_lender_status_idx",
+          "columns": [
+            {
+              "expression": "lender_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "status",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "with": {},
+          "method": "btree",
+          "concurrently": false
+        },
+        "loan_accounts_user_idx": {
+          "name": "loan_accounts_user_idx",
+          "columns": [
+            {
+              "expression": "user_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "with": {},
+          "method": "btree",
+          "concurrently": false
+        },
+        "loan_accounts_dpd_idx": {
+          "name": "loan_accounts_dpd_idx",
+          "columns": [
+            {
+              "expression": "dpd",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "with": {},
+          "method": "btree",
+          "where": "dpd > 0",
+          "concurrently": false
+        }
+      },
+      "foreignKeys": {
+        "loan_accounts_lender_id_lenders_id_fk": {
+          "name": "loan_accounts_lender_id_lenders_id_fk",
+          "tableFrom": "loan_accounts",
+          "columnsFrom": [
+            "lender_id"
+          ],
+          "tableTo": "lenders",
+          "columnsTo": [
+            "id"
+          ],
+          "onUpdate": "no action",
+          "onDelete": "no action"
+        },
+        "loan_accounts_user_id_users_id_fk": {
+          "name": "loan_accounts_user_id_users_id_fk",
+          "tableFrom": "loan_accounts",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "tableTo": "users",
+          "columnsTo": [
+            "id"
+          ],
+          "onUpdate": "no action",
+          "onDelete": "no action"
+        },
+        "loan_accounts_application_id_loan_applications_id_fk": {
+          "name": "loan_accounts_application_id_loan_applications_id_fk",
+          "tableFrom": "loan_accounts",
+          "columnsFrom": [
+            "application_id"
+          ],
+          "tableTo": "loan_applications",
+          "columnsTo": [
+            "id"
+          ],
+          "onUpdate": "no action",
+          "onDelete": "no action"
+        },
+        "loan_accounts_offer_id_loan_offers_id_fk": {
+          "name": "loan_accounts_offer_id_loan_offers_id_fk",
+          "tableFrom": "loan_accounts",
+          "columnsFrom": [
+            "offer_id"
+          ],
+          "tableTo": "loan_offers",
+          "columnsTo": [
+            "id"
+          ],
+          "onUpdate": "no action",
+          "onDelete": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.loan_applications": {
+      "name": "loan_applications",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "application_no": {
+          "name": "application_no",
+          "type": "varchar(24)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "lender_id": {
+          "name": "lender_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "product_id": {
+          "name": "product_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "status": {
+          "name": "status",
+          "type": "application_status",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'draft'"
+        },
+        "requested_amount": {
+          "name": "requested_amount",
+          "type": "numeric(18, 2)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "requested_tenure_days": {
+          "name": "requested_tenure_days",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "declared_monthly_income": {
+          "name": "declared_monthly_income",
+          "type": "numeric(18, 2)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "declared_existing_emi": {
+          "name": "declared_existing_emi",
+          "type": "numeric(18, 2)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "purpose": {
+          "name": "purpose",
+          "type": "varchar(40)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "assigned_to": {
+          "name": "assigned_to",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "sla_due_at": {
+          "name": "sla_due_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "submitted_at": {
+          "name": "submitted_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "decided_at": {
+          "name": "decided_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "rejection_reason_codes": {
+          "name": "rejection_reason_codes",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "version": {
+          "name": "version",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 1
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "loan_apps_no_uq": {
+          "name": "loan_apps_no_uq",
+          "columns": [
+            {
+              "expression": "application_no",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "with": {},
+          "method": "btree",
+          "concurrently": false
+        },
+        "loan_apps_user_idx": {
+          "name": "loan_apps_user_idx",
+          "columns": [
+            {
+              "expression": "user_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "with": {},
+          "method": "btree",
+          "concurrently": false
+        },
+        "loan_apps_lender_status_idx": {
+          "name": "loan_apps_lender_status_idx",
+          "columns": [
+            {
+              "expression": "lender_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "status",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "with": {},
+          "method": "btree",
+          "concurrently": false
+        },
+        "loan_apps_assigned_idx": {
+          "name": "loan_apps_assigned_idx",
+          "columns": [
+            {
+              "expression": "assigned_to",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "status",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "with": {},
+          "method": "btree",
+          "concurrently": false
+        },
+        "loan_apps_one_open_per_user_uq": {
+          "name": "loan_apps_one_open_per_user_uq",
+          "columns": [
+            {
+              "expression": "user_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "with": {},
+          "method": "btree",
+          "where": "status NOT IN ('rejected','cancelled','disbursed')",
+          "concurrently": false
+        }
+      },
+      "foreignKeys": {
+        "loan_applications_user_id_users_id_fk": {
+          "name": "loan_applications_user_id_users_id_fk",
+          "tableFrom": "loan_applications",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "tableTo": "users",
+          "columnsTo": [
+            "id"
+          ],
+          "onUpdate": "no action",
+          "onDelete": "no action"
+        },
+        "loan_applications_lender_id_lenders_id_fk": {
+          "name": "loan_applications_lender_id_lenders_id_fk",
+          "tableFrom": "loan_applications",
+          "columnsFrom": [
+            "lender_id"
+          ],
+          "tableTo": "lenders",
+          "columnsTo": [
+            "id"
+          ],
+          "onUpdate": "no action",
+          "onDelete": "no action"
+        },
+        "loan_applications_product_id_loan_products_id_fk": {
+          "name": "loan_applications_product_id_loan_products_id_fk",
+          "tableFrom": "loan_applications",
+          "columnsFrom": [
+            "product_id"
+          ],
+          "tableTo": "loan_products",
+          "columnsTo": [
+            "id"
+          ],
+          "onUpdate": "no action",
+          "onDelete": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {
+        "loan_apps_amount_chk": {
+          "name": "loan_apps_amount_chk",
+          "value": "\"loan_applications\".\"requested_amount\" > 0"
+        }
+      },
+      "isRLSEnabled": false
+    },
+    "public.loan_documents": {
+      "name": "loan_documents",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "application_id": {
+          "name": "application_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "loan_account_id": {
+          "name": "loan_account_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "type": {
+          "name": "type",
+          "type": "document_type",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "storage_key": {
+          "name": "storage_key",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "sha256": {
+          "name": "sha256",
+          "type": "varchar(64)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "mime_type": {
+          "name": "mime_type",
+          "type": "varchar(64)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "size_bytes": {
+          "name": "size_bytes",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "template_version": {
+          "name": "template_version",
+          "type": "varchar(24)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "esign_provider": {
+          "name": "esign_provider",
+          "type": "varchar(32)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "esign_ref": {
+          "name": "esign_ref",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "esigned_at": {
+          "name": "esigned_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "is_mock_signed": {
+          "name": "is_mock_signed",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "tamper_flags": {
+          "name": "tamper_flags",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "loan_docs_app_idx": {
+          "name": "loan_docs_app_idx",
+          "columns": [
+            {
+              "expression": "application_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "with": {},
+          "method": "btree",
+          "concurrently": false
+        },
+        "loan_docs_account_idx": {
+          "name": "loan_docs_account_idx",
+          "columns": [
+            {
+              "expression": "loan_account_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "with": {},
+          "method": "btree",
+          "concurrently": false
+        }
+      },
+      "foreignKeys": {
+        "loan_documents_user_id_users_id_fk": {
+          "name": "loan_documents_user_id_users_id_fk",
+          "tableFrom": "loan_documents",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "tableTo": "users",
+          "columnsTo": [
+            "id"
+          ],
+          "onUpdate": "no action",
+          "onDelete": "no action"
+        },
+        "loan_documents_application_id_loan_applications_id_fk": {
+          "name": "loan_documents_application_id_loan_applications_id_fk",
+          "tableFrom": "loan_documents",
+          "columnsFrom": [
+            "application_id"
+          ],
+          "tableTo": "loan_applications",
+          "columnsTo": [
+            "id"
+          ],
+          "onUpdate": "no action",
+          "onDelete": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.loan_offers": {
+      "name": "loan_offers",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "application_id": {
+          "name": "application_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "lender_id": {
+          "name": "lender_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "product_id": {
+          "name": "product_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "status": {
+          "name": "status",
+          "type": "offer_status",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'generated'"
+        },
+        "principal": {
+          "name": "principal",
+          "type": "numeric(18, 2)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "tenure_days": {
+          "name": "tenure_days",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "annual_interest_rate": {
+          "name": "annual_interest_rate",
+          "type": "numeric(12, 8)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "interest_amount": {
+          "name": "interest_amount",
+          "type": "numeric(18, 2)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "processing_fee": {
+          "name": "processing_fee",
+          "type": "numeric(18, 2)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "gst_on_fees": {
+          "name": "gst_on_fees",
+          "type": "numeric(18, 2)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "other_charges": {
+          "name": "other_charges",
+          "type": "numeric(18, 2)",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'0'"
+        },
+        "net_disbursement": {
+          "name": "net_disbursement",
+          "type": "numeric(18, 2)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "total_repayment": {
+          "name": "total_repayment",
+          "type": "numeric(18, 2)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "apr": {
+          "name": "apr",
+          "type": "numeric(12, 8)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "first_due_date": {
+          "name": "first_due_date",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "schedule_preview": {
+          "name": "schedule_preview",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "kfs_version": {
+          "name": "kfs_version",
+          "type": "varchar(24)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "kfs_document_id": {
+          "name": "kfs_document_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "valid_until": {
+          "name": "valid_until",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "accepted_at": {
+          "name": "accepted_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "acceptance_consent_id": {
+          "name": "acceptance_consent_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "loan_offers_app_idx": {
+          "name": "loan_offers_app_idx",
+          "columns": [
+            {
+              "expression": "application_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "with": {},
+          "method": "btree",
+          "concurrently": false
+        }
+      },
+      "foreignKeys": {
+        "loan_offers_application_id_loan_applications_id_fk": {
+          "name": "loan_offers_application_id_loan_applications_id_fk",
+          "tableFrom": "loan_offers",
+          "columnsFrom": [
+            "application_id"
+          ],
+          "tableTo": "loan_applications",
+          "columnsTo": [
+            "id"
+          ],
+          "onUpdate": "no action",
+          "onDelete": "no action"
+        },
+        "loan_offers_lender_id_lenders_id_fk": {
+          "name": "loan_offers_lender_id_lenders_id_fk",
+          "tableFrom": "loan_offers",
+          "columnsFrom": [
+            "lender_id"
+          ],
+          "tableTo": "lenders",
+          "columnsTo": [
+            "id"
+          ],
+          "onUpdate": "no action",
+          "onDelete": "no action"
+        },
+        "loan_offers_product_id_loan_products_id_fk": {
+          "name": "loan_offers_product_id_loan_products_id_fk",
+          "tableFrom": "loan_offers",
+          "columnsFrom": [
+            "product_id"
+          ],
+          "tableTo": "loan_products",
+          "columnsTo": [
+            "id"
+          ],
+          "onUpdate": "no action",
+          "onDelete": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {
+        "loan_offers_math_chk": {
+          "name": "loan_offers_math_chk",
+          "value": "\"loan_offers\".\"net_disbursement\" = \"loan_offers\".\"principal\" - \"loan_offers\".\"processing_fee\" - \"loan_offers\".\"gst_on_fees\" - \"loan_offers\".\"other_charges\""
+        }
+      },
+      "isRLSEnabled": false
+    },
+    "public.loan_schedules": {
+      "name": "loan_schedules",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "loan_account_id": {
+          "name": "loan_account_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "instalment_no": {
+          "name": "instalment_no",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "due_date": {
+          "name": "due_date",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "principal_due": {
+          "name": "principal_due",
+          "type": "numeric(18, 2)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "interest_due": {
+          "name": "interest_due",
+          "type": "numeric(18, 2)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "fees_due": {
+          "name": "fees_due",
+          "type": "numeric(18, 2)",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'0'"
+        },
+        "total_due": {
+          "name": "total_due",
+          "type": "numeric(18, 2)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "paid_amount": {
+          "name": "paid_amount",
+          "type": "numeric(18, 2)",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'0'"
+        },
+        "status": {
+          "name": "status",
+          "type": "schedule_status",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'upcoming'"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "loan_schedules_acct_no_uq": {
+          "name": "loan_schedules_acct_no_uq",
+          "columns": [
+            {
+              "expression": "loan_account_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "instalment_no",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "with": {},
+          "method": "btree",
+          "concurrently": false
+        },
+        "loan_schedules_due_idx": {
+          "name": "loan_schedules_due_idx",
+          "columns": [
+            {
+              "expression": "due_date",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "status",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "with": {},
+          "method": "btree",
+          "concurrently": false
+        }
+      },
+      "foreignKeys": {
+        "loan_schedules_loan_account_id_loan_accounts_id_fk": {
+          "name": "loan_schedules_loan_account_id_loan_accounts_id_fk",
+          "tableFrom": "loan_schedules",
+          "columnsFrom": [
+            "loan_account_id"
+          ],
+          "tableTo": "loan_accounts",
+          "columnsTo": [
+            "id"
+          ],
+          "onUpdate": "no action",
+          "onDelete": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.mandates": {
+      "name": "mandates",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "loan_account_id": {
+          "name": "loan_account_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "bank_account_id": {
+          "name": "bank_account_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "type": {
+          "name": "type",
+          "type": "varchar(16)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "provider": {
+          "name": "provider",
+          "type": "varchar(32)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "mode": {
+          "name": "mode",
+          "type": "integration_mode",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "is_mock": {
+          "name": "is_mock",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "max_amount": {
+          "name": "max_amount",
+          "type": "numeric(18, 2)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "status": {
+          "name": "status",
+          "type": "mandate_status",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'created'"
+        },
+        "umrn": {
+          "name": "umrn",
+          "type": "varchar(40)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "valid_until": {
+          "name": "valid_until",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "consent_record_id": {
+          "name": "consent_record_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "mandates_account_idx": {
+          "name": "mandates_account_idx",
+          "columns": [
+            {
+              "expression": "loan_account_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "with": {},
+          "method": "btree",
+          "concurrently": false
+        }
+      },
+      "foreignKeys": {
+        "mandates_user_id_users_id_fk": {
+          "name": "mandates_user_id_users_id_fk",
+          "tableFrom": "mandates",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "tableTo": "users",
+          "columnsTo": [
+            "id"
+          ],
+          "onUpdate": "no action",
+          "onDelete": "no action"
+        },
+        "mandates_loan_account_id_loan_accounts_id_fk": {
+          "name": "mandates_loan_account_id_loan_accounts_id_fk",
+          "tableFrom": "mandates",
+          "columnsFrom": [
+            "loan_account_id"
+          ],
+          "tableTo": "loan_accounts",
+          "columnsTo": [
+            "id"
+          ],
+          "onUpdate": "no action",
+          "onDelete": "no action"
+        },
+        "mandates_bank_account_id_bank_accounts_id_fk": {
+          "name": "mandates_bank_account_id_bank_accounts_id_fk",
+          "tableFrom": "mandates",
+          "columnsFrom": [
+            "bank_account_id"
+          ],
+          "tableTo": "bank_accounts",
+          "columnsTo": [
+            "id"
+          ],
+          "onUpdate": "no action",
+          "onDelete": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.repayment_allocations": {
+      "name": "repayment_allocations",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "repayment_id": {
+          "name": "repayment_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "schedule_id": {
+          "name": "schedule_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "bucket": {
+          "name": "bucket",
+          "type": "allocation_bucket",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "amount": {
+          "name": "amount",
+          "type": "numeric(18, 2)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "repay_alloc_repay_idx": {
+          "name": "repay_alloc_repay_idx",
+          "columns": [
+            {
+              "expression": "repayment_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "with": {},
+          "method": "btree",
+          "concurrently": false
+        }
+      },
+      "foreignKeys": {
+        "repayment_allocations_repayment_id_repayments_id_fk": {
+          "name": "repayment_allocations_repayment_id_repayments_id_fk",
+          "tableFrom": "repayment_allocations",
+          "columnsFrom": [
+            "repayment_id"
+          ],
+          "tableTo": "repayments",
+          "columnsTo": [
+            "id"
+          ],
+          "onUpdate": "no action",
+          "onDelete": "no action"
+        },
+        "repayment_allocations_schedule_id_loan_schedules_id_fk": {
+          "name": "repayment_allocations_schedule_id_loan_schedules_id_fk",
+          "tableFrom": "repayment_allocations",
+          "columnsFrom": [
+            "schedule_id"
+          ],
+          "tableTo": "loan_schedules",
+          "columnsTo": [
+            "id"
+          ],
+          "onUpdate": "no action",
+          "onDelete": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.repayments": {
+      "name": "repayments",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "loan_account_id": {
+          "name": "loan_account_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "lender_id": {
+          "name": "lender_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "amount": {
+          "name": "amount",
+          "type": "numeric(18, 2)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "channel": {
+          "name": "channel",
+          "type": "repayment_channel",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "status": {
+          "name": "status",
+          "type": "repayment_status",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'initiated'"
+        },
+        "idempotency_key": {
+          "name": "idempotency_key",
+          "type": "varchar(80)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "provider": {
+          "name": "provider",
+          "type": "varchar(32)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "mode": {
+          "name": "mode",
+          "type": "integration_mode",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "is_mock": {
+          "name": "is_mock",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "provider_ref": {
+          "name": "provider_ref",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "utr": {
+          "name": "utr",
+          "type": "varchar(40)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "paid_at": {
+          "name": "paid_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "receipt_document_id": {
+          "name": "receipt_document_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "repay_idem_uq": {
+          "name": "repay_idem_uq",
+          "columns": [
+            {
+              "expression": "idempotency_key",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "with": {},
+          "method": "btree",
+          "concurrently": false
+        },
+        "repay_provider_ref_uq": {
+          "name": "repay_provider_ref_uq",
+          "columns": [
+            {
+              "expression": "provider",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "provider_ref",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "with": {},
+          "method": "btree",
+          "concurrently": false
+        },
+        "repay_account_idx": {
+          "name": "repay_account_idx",
+          "columns": [
+            {
+              "expression": "loan_account_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "with": {},
+          "method": "btree",
+          "concurrently": false
+        }
+      },
+      "foreignKeys": {
+        "repayments_loan_account_id_loan_accounts_id_fk": {
+          "name": "repayments_loan_account_id_loan_accounts_id_fk",
+          "tableFrom": "repayments",
+          "columnsFrom": [
+            "loan_account_id"
+          ],
+          "tableTo": "loan_accounts",
+          "columnsTo": [
+            "id"
+          ],
+          "onUpdate": "no action",
+          "onDelete": "no action"
+        },
+        "repayments_lender_id_lenders_id_fk": {
+          "name": "repayments_lender_id_lenders_id_fk",
+          "tableFrom": "repayments",
+          "columnsFrom": [
+            "lender_id"
+          ],
+          "tableTo": "lenders",
+          "columnsTo": [
+            "id"
+          ],
+          "onUpdate": "no action",
+          "onDelete": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {
+        "repay_amount_chk": {
+          "name": "repay_amount_chk",
+          "value": "\"repayments\".\"amount\" > 0"
+        }
+      },
+      "isRLSEnabled": false
+    },
+    "public.ledger_accounts": {
+      "name": "ledger_accounts",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "lender_id": {
+          "name": "lender_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "code": {
+          "name": "code",
+          "type": "varchar(64)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "type": {
+          "name": "type",
+          "type": "ledger_account_type",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "loan_account_id": {
+          "name": "loan_account_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "ledger_accounts_lender_code_uq": {
+          "name": "ledger_accounts_lender_code_uq",
+          "columns": [
+            {
+              "expression": "lender_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "code",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "with": {},
+          "method": "btree",
+          "concurrently": false
+        }
+      },
+      "foreignKeys": {
+        "ledger_accounts_lender_id_lenders_id_fk": {
+          "name": "ledger_accounts_lender_id_lenders_id_fk",
+          "tableFrom": "ledger_accounts",
+          "columnsFrom": [
+            "lender_id"
+          ],
+          "tableTo": "lenders",
+          "columnsTo": [
+            "id"
+          ],
+          "onUpdate": "no action",
+          "onDelete": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.ledger_entries": {
+      "name": "ledger_entries",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "transaction_id": {
+          "name": "transaction_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "ledger_account_id": {
+          "name": "ledger_account_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "direction": {
+          "name": "direction",
+          "type": "entry_direction",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "amount": {
+          "name": "amount",
+          "type": "numeric(18, 2)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "ledger_entries_txn_idx": {
+          "name": "ledger_entries_txn_idx",
+          "columns": [
+            {
+              "expression": "transaction_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "with": {},
+          "method": "btree",
+          "concurrently": false
+        },
+        "ledger_entries_account_idx": {
+          "name": "ledger_entries_account_idx",
+          "columns": [
+            {
+              "expression": "ledger_account_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "with": {},
+          "method": "btree",
+          "concurrently": false
+        }
+      },
+      "foreignKeys": {
+        "ledger_entries_transaction_id_ledger_transactions_id_fk": {
+          "name": "ledger_entries_transaction_id_ledger_transactions_id_fk",
+          "tableFrom": "ledger_entries",
+          "columnsFrom": [
+            "transaction_id"
+          ],
+          "tableTo": "ledger_transactions",
+          "columnsTo": [
+            "id"
+          ],
+          "onUpdate": "no action",
+          "onDelete": "no action"
+        },
+        "ledger_entries_ledger_account_id_ledger_accounts_id_fk": {
+          "name": "ledger_entries_ledger_account_id_ledger_accounts_id_fk",
+          "tableFrom": "ledger_entries",
+          "columnsFrom": [
+            "ledger_account_id"
+          ],
+          "tableTo": "ledger_accounts",
+          "columnsTo": [
+            "id"
+          ],
+          "onUpdate": "no action",
+          "onDelete": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {
+        "ledger_entries_positive_chk": {
+          "name": "ledger_entries_positive_chk",
+          "value": "\"ledger_entries\".\"amount\" > 0"
+        }
+      },
+      "isRLSEnabled": false
+    },
+    "public.ledger_transactions": {
+      "name": "ledger_transactions",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "lender_id": {
+          "name": "lender_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "event_type": {
+          "name": "event_type",
+          "type": "varchar(40)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "source_type": {
+          "name": "source_type",
+          "type": "varchar(32)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "source_id": {
+          "name": "source_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "idempotency_key": {
+          "name": "idempotency_key",
+          "type": "varchar(80)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "value_date": {
+          "name": "value_date",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "reverses_transaction_id": {
+          "name": "reverses_transaction_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "metadata": {
+          "name": "metadata",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "ledger_txn_idem_uq": {
+          "name": "ledger_txn_idem_uq",
+          "columns": [
+            {
+              "expression": "idempotency_key",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "with": {},
+          "method": "btree",
+          "concurrently": false
+        },
+        "ledger_txn_source_idx": {
+          "name": "ledger_txn_source_idx",
+          "columns": [
+            {
+              "expression": "source_type",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "source_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "with": {},
+          "method": "btree",
+          "concurrently": false
+        }
+      },
+      "foreignKeys": {
+        "ledger_transactions_lender_id_lenders_id_fk": {
+          "name": "ledger_transactions_lender_id_lenders_id_fk",
+          "tableFrom": "ledger_transactions",
+          "columnsFrom": [
+            "lender_id"
+          ],
+          "tableTo": "lenders",
+          "columnsTo": [
+            "id"
+          ],
+          "onUpdate": "no action",
+          "onDelete": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.admin_user_roles": {
+      "name": "admin_user_roles",
+      "schema": "",
+      "columns": {
+        "admin_user_id": {
+          "name": "admin_user_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "role_id": {
+          "name": "role_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "lender_id": {
+          "name": "lender_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "admin_user_roles_admin_user_id_admin_users_id_fk": {
+          "name": "admin_user_roles_admin_user_id_admin_users_id_fk",
+          "tableFrom": "admin_user_roles",
+          "columnsFrom": [
+            "admin_user_id"
+          ],
+          "tableTo": "admin_users",
+          "columnsTo": [
+            "id"
+          ],
+          "onUpdate": "no action",
+          "onDelete": "no action"
+        },
+        "admin_user_roles_role_id_roles_id_fk": {
+          "name": "admin_user_roles_role_id_roles_id_fk",
+          "tableFrom": "admin_user_roles",
+          "columnsFrom": [
+            "role_id"
+          ],
+          "tableTo": "roles",
+          "columnsTo": [
+            "id"
+          ],
+          "onUpdate": "no action",
+          "onDelete": "no action"
+        },
+        "admin_user_roles_lender_id_lenders_id_fk": {
+          "name": "admin_user_roles_lender_id_lenders_id_fk",
+          "tableFrom": "admin_user_roles",
+          "columnsFrom": [
+            "lender_id"
+          ],
+          "tableTo": "lenders",
+          "columnsTo": [
+            "id"
+          ],
+          "onUpdate": "no action",
+          "onDelete": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "admin_user_roles_admin_user_id_role_id_pk": {
+          "name": "admin_user_roles_admin_user_id_role_id_pk",
+          "columns": [
+            "admin_user_id",
+            "role_id"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.admin_users": {
+      "name": "admin_users",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "email": {
+          "name": "email",
+          "type": "varchar(254)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "full_name": {
+          "name": "full_name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "lender_id": {
+          "name": "lender_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "password_hash": {
+          "name": "password_hash",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "mfa_secret_enc": {
+          "name": "mfa_secret_enc",
+          "type": "bytea",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "mfa_enabled": {
+          "name": "mfa_enabled",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "is_active": {
+          "name": "is_active",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": true
+        },
+        "last_login_at": {
+          "name": "last_login_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "deleted_at": {
+          "name": "deleted_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "admin_users_email_uq": {
+          "name": "admin_users_email_uq",
+          "columns": [
+            {
+              "expression": "email",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "with": {},
+          "method": "btree",
+          "concurrently": false
+        }
+      },
+      "foreignKeys": {
+        "admin_users_lender_id_lenders_id_fk": {
+          "name": "admin_users_lender_id_lenders_id_fk",
+          "tableFrom": "admin_users",
+          "columnsFrom": [
+            "lender_id"
+          ],
+          "tableTo": "lenders",
+          "columnsTo": [
+            "id"
+          ],
+          "onUpdate": "no action",
+          "onDelete": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.api_integrations": {
+      "name": "api_integrations",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "lender_id": {
+          "name": "lender_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "category": {
+          "name": "category",
+          "type": "varchar(24)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "provider": {
+          "name": "provider",
+          "type": "varchar(40)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "mode": {
+          "name": "mode",
+          "type": "integration_mode",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'mock'"
+        },
+        "secret_ref": {
+          "name": "secret_ref",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "config": {
+          "name": "config",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "is_enabled": {
+          "name": "is_enabled",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "last_health_at": {
+          "name": "last_health_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "last_health_ok": {
+          "name": "last_health_ok",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "live_approved_by": {
+          "name": "live_approved_by",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "live_approved_at": {
+          "name": "live_approved_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "api_integrations_scope_uq": {
+          "name": "api_integrations_scope_uq",
+          "columns": [
+            {
+              "expression": "lender_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "category",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "provider",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "with": {},
+          "method": "btree",
+          "concurrently": false
+        }
+      },
+      "foreignKeys": {
+        "api_integrations_lender_id_lenders_id_fk": {
+          "name": "api_integrations_lender_id_lenders_id_fk",
+          "tableFrom": "api_integrations",
+          "columnsFrom": [
+            "lender_id"
+          ],
+          "tableTo": "lenders",
+          "columnsTo": [
+            "id"
+          ],
+          "onUpdate": "no action",
+          "onDelete": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.audit_logs": {
+      "name": "audit_logs",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "actor_type": {
+          "name": "actor_type",
+          "type": "actor_type",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "actor_id": {
+          "name": "actor_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "lender_id": {
+          "name": "lender_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "action": {
+          "name": "action",
+          "type": "varchar(80)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "entity_type": {
+          "name": "entity_type",
+          "type": "varchar(48)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "entity_id": {
+          "name": "entity_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "before": {
+          "name": "before",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "after": {
+          "name": "after",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "reason": {
+          "name": "reason",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "ip": {
+          "name": "ip",
+          "type": "inet",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "request_id": {
+          "name": "request_id",
+          "type": "varchar(64)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "prev_hash": {
+          "name": "prev_hash",
+          "type": "varchar(64)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "hash": {
+          "name": "hash",
+          "type": "varchar(64)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "audit_entity_idx": {
+          "name": "audit_entity_idx",
+          "columns": [
+            {
+              "expression": "entity_type",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "entity_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "with": {},
+          "method": "btree",
+          "concurrently": false
+        },
+        "audit_actor_idx": {
+          "name": "audit_actor_idx",
+          "columns": [
+            {
+              "expression": "actor_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "created_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "with": {},
+          "method": "btree",
+          "concurrently": false
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.collections_cases": {
+      "name": "collections_cases",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "loan_account_id": {
+          "name": "loan_account_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "lender_id": {
+          "name": "lender_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "stage": {
+          "name": "stage",
+          "type": "collections_stage",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "status": {
+          "name": "status",
+          "type": "case_status",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'open'"
+        },
+        "assigned_to": {
+          "name": "assigned_to",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "recovery_agency_ref": {
+          "name": "recovery_agency_ref",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "promise_to_pay_date": {
+          "name": "promise_to_pay_date",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "contact_attempts_today": {
+          "name": "contact_attempts_today",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "notes": {
+          "name": "notes",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "collections_lender_stage_idx": {
+          "name": "collections_lender_stage_idx",
+          "columns": [
+            {
+              "expression": "lender_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "stage",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "status",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "with": {},
+          "method": "btree",
+          "concurrently": false
+        }
+      },
+      "foreignKeys": {
+        "collections_cases_loan_account_id_loan_accounts_id_fk": {
+          "name": "collections_cases_loan_account_id_loan_accounts_id_fk",
+          "tableFrom": "collections_cases",
+          "columnsFrom": [
+            "loan_account_id"
+          ],
+          "tableTo": "loan_accounts",
+          "columnsTo": [
+            "id"
+          ],
+          "onUpdate": "no action",
+          "onDelete": "no action"
+        },
+        "collections_cases_lender_id_lenders_id_fk": {
+          "name": "collections_cases_lender_id_lenders_id_fk",
+          "tableFrom": "collections_cases",
+          "columnsFrom": [
+            "lender_id"
+          ],
+          "tableTo": "lenders",
+          "columnsTo": [
+            "id"
+          ],
+          "onUpdate": "no action",
+          "onDelete": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.complaints": {
+      "name": "complaints",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "ticket_no": {
+          "name": "ticket_no",
+          "type": "varchar(24)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "lender_id": {
+          "name": "lender_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "loan_account_id": {
+          "name": "loan_account_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "category": {
+          "name": "category",
+          "type": "varchar(40)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "description": {
+          "name": "description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "status": {
+          "name": "status",
+          "type": "complaint_status",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'received'"
+        },
+        "assigned_to": {
+          "name": "assigned_to",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "acknowledged_at": {
+          "name": "acknowledged_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "resolution_due_at": {
+          "name": "resolution_due_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "resolved_at": {
+          "name": "resolved_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "resolution": {
+          "name": "resolution",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "complaints_ticket_uq": {
+          "name": "complaints_ticket_uq",
+          "columns": [
+            {
+              "expression": "ticket_no",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "with": {},
+          "method": "btree",
+          "concurrently": false
+        },
+        "complaints_status_idx": {
+          "name": "complaints_status_idx",
+          "columns": [
+            {
+              "expression": "status",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "resolution_due_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "with": {},
+          "method": "btree",
+          "concurrently": false
+        }
+      },
+      "foreignKeys": {
+        "complaints_user_id_users_id_fk": {
+          "name": "complaints_user_id_users_id_fk",
+          "tableFrom": "complaints",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "tableTo": "users",
+          "columnsTo": [
+            "id"
+          ],
+          "onUpdate": "no action",
+          "onDelete": "no action"
+        },
+        "complaints_lender_id_lenders_id_fk": {
+          "name": "complaints_lender_id_lenders_id_fk",
+          "tableFrom": "complaints",
+          "columnsFrom": [
+            "lender_id"
+          ],
+          "tableTo": "lenders",
+          "columnsTo": [
+            "id"
+          ],
+          "onUpdate": "no action",
+          "onDelete": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.idempotency_keys": {
+      "name": "idempotency_keys",
+      "schema": "",
+      "columns": {
+        "key": {
+          "name": "key",
+          "type": "varchar(80)",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "scope": {
+          "name": "scope",
+          "type": "varchar(48)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "request_hash": {
+          "name": "request_hash",
+          "type": "varchar(64)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "response_status": {
+          "name": "response_status",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "response_body": {
+          "name": "response_body",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "locked_until": {
+          "name": "locked_until",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.notifications": {
+      "name": "notifications",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "loan_account_id": {
+          "name": "loan_account_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "channel": {
+          "name": "channel",
+          "type": "notification_channel",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "template_code": {
+          "name": "template_code",
+          "type": "varchar(64)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "dlt_template_id": {
+          "name": "dlt_template_id",
+          "type": "varchar(40)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "status": {
+          "name": "status",
+          "type": "notification_status",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'queued'"
+        },
+        "is_mock": {
+          "name": "is_mock",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "payload": {
+          "name": "payload",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "provider_ref": {
+          "name": "provider_ref",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "scheduled_for": {
+          "name": "scheduled_for",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "sent_at": {
+          "name": "sent_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "failure_reason": {
+          "name": "failure_reason",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "notifications_user_idx": {
+          "name": "notifications_user_idx",
+          "columns": [
+            {
+              "expression": "user_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "created_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "with": {},
+          "method": "btree",
+          "concurrently": false
+        },
+        "notifications_status_idx": {
+          "name": "notifications_status_idx",
+          "columns": [
+            {
+              "expression": "status",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "scheduled_for",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "with": {},
+          "method": "btree",
+          "concurrently": false
+        }
+      },
+      "foreignKeys": {
+        "notifications_user_id_users_id_fk": {
+          "name": "notifications_user_id_users_id_fk",
+          "tableFrom": "notifications",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "tableTo": "users",
+          "columnsTo": [
+            "id"
+          ],
+          "onUpdate": "no action",
+          "onDelete": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.permissions": {
+      "name": "permissions",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "code": {
+          "name": "code",
+          "type": "varchar(64)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "description": {
+          "name": "description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "is_critical": {
+          "name": "is_critical",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        }
+      },
+      "indexes": {
+        "permissions_code_uq": {
+          "name": "permissions_code_uq",
+          "columns": [
+            {
+              "expression": "code",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "with": {},
+          "method": "btree",
+          "concurrently": false
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.role_permissions": {
+      "name": "role_permissions",
+      "schema": "",
+      "columns": {
+        "role_id": {
+          "name": "role_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "permission_id": {
+          "name": "permission_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "role_permissions_role_id_roles_id_fk": {
+          "name": "role_permissions_role_id_roles_id_fk",
+          "tableFrom": "role_permissions",
+          "columnsFrom": [
+            "role_id"
+          ],
+          "tableTo": "roles",
+          "columnsTo": [
+            "id"
+          ],
+          "onUpdate": "no action",
+          "onDelete": "no action"
+        },
+        "role_permissions_permission_id_permissions_id_fk": {
+          "name": "role_permissions_permission_id_permissions_id_fk",
+          "tableFrom": "role_permissions",
+          "columnsFrom": [
+            "permission_id"
+          ],
+          "tableTo": "permissions",
+          "columnsTo": [
+            "id"
+          ],
+          "onUpdate": "no action",
+          "onDelete": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "role_permissions_role_id_permission_id_pk": {
+          "name": "role_permissions_role_id_permission_id_pk",
+          "columns": [
+            "role_id",
+            "permission_id"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.roles": {
+      "name": "roles",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "code": {
+          "name": "code",
+          "type": "varchar(48)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "scope": {
+          "name": "scope",
+          "type": "varchar(16)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "roles_code_uq": {
+          "name": "roles_code_uq",
+          "columns": [
+            {
+              "expression": "code",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "with": {},
+          "method": "btree",
+          "concurrently": false
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.webhook_events": {
+      "name": "webhook_events",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "provider": {
+          "name": "provider",
+          "type": "varchar(40)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "event_type": {
+          "name": "event_type",
+          "type": "varchar(64)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "provider_event_id": {
+          "name": "provider_event_id",
+          "type": "varchar(128)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "signature_valid": {
+          "name": "signature_valid",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "payload_enc": {
+          "name": "payload_enc",
+          "type": "bytea",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "processed_at": {
+          "name": "processed_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "processing_error": {
+          "name": "processing_error",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "attempts": {
+          "name": "attempts",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "webhook_provider_event_uq": {
+          "name": "webhook_provider_event_uq",
+          "columns": [
+            {
+              "expression": "provider",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "provider_event_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "with": {},
+          "method": "btree",
+          "concurrently": false
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    }
+  },
+  "enums": {
+    "public.aa_consent_status": {
+      "name": "aa_consent_status",
+      "schema": "public",
+      "values": [
+        "created",
+        "pending_user",
+        "active",
+        "rejected",
+        "paused",
+        "revoked",
+        "expired",
+        "data_ready",
+        "data_fetch_failed"
+      ]
+    },
+    "public.actor_type": {
+      "name": "actor_type",
+      "schema": "public",
+      "values": [
+        "customer",
+        "staff",
+        "system",
+        "provider"
+      ]
+    },
+    "public.allocation_bucket": {
+      "name": "allocation_bucket",
+      "schema": "public",
+      "values": [
+        "penal_charges",
+        "fees",
+        "interest",
+        "principal"
+      ]
+    },
+    "public.application_status": {
+      "name": "application_status",
+      "schema": "public",
+      "values": [
+        "draft",
+        "submitted",
+        "otp_verified",
+        "kyc_pending",
+        "kyc_verified",
+        "bank_verification_pending",
+        "credit_check_pending",
+        "underwriting_pending",
+        "manual_review",
+        "approved",
+        "rejected",
+        "offer_generated",
+        "agreement_pending",
+        "sanctioned",
+        "disbursement_pending",
+        "disbursed",
+        "cancelled"
+      ]
+    },
+    "public.case_status": {
+      "name": "case_status",
+      "schema": "public",
+      "values": [
+        "open",
+        "in_progress",
+        "promise_to_pay",
+        "resolved",
+        "escalated",
+        "closed"
+      ]
+    },
+    "public.collections_stage": {
+      "name": "collections_stage",
+      "schema": "public",
+      "values": [
+        "dpd_1_30",
+        "dpd_31_60",
+        "dpd_61_90",
+        "dpd_90_plus"
+      ]
+    },
+    "public.complaint_status": {
+      "name": "complaint_status",
+      "schema": "public",
+      "values": [
+        "received",
+        "acknowledged",
+        "in_progress",
+        "resolved",
+        "escalated_to_lender",
+        "escalated_to_rbi_ombudsman",
+        "closed"
+      ]
+    },
+    "public.consent_purpose": {
+      "name": "consent_purpose",
+      "schema": "public",
+      "values": [
+        "terms_of_use",
+        "privacy_notice",
+        "kyc",
+        "bureau_pull",
+        "account_aggregator",
+        "communications_sms",
+        "communications_email",
+        "communications_whatsapp",
+        "marketing",
+        "loan_agreement",
+        "e_mandate"
+      ]
+    },
+    "public.consent_status": {
+      "name": "consent_status",
+      "schema": "public",
+      "values": [
+        "granted",
+        "withdrawn",
+        "expired"
+      ]
+    },
+    "public.decision_outcome": {
+      "name": "decision_outcome",
+      "schema": "public",
+      "values": [
+        "approve",
+        "refer",
+        "decline"
+      ]
+    },
+    "public.disbursement_status": {
+      "name": "disbursement_status",
+      "schema": "public",
+      "values": [
+        "requested",
+        "awaiting_checker",
+        "approved",
+        "submitted",
+        "processing",
+        "success",
+        "failed",
+        "reversed"
+      ]
+    },
+    "public.document_type": {
+      "name": "document_type",
+      "schema": "public",
+      "values": [
+        "kfs",
+        "loan_agreement",
+        "sanction_letter",
+        "salary_slip",
+        "bank_statement",
+        "business_proof",
+        "receipt",
+        "noc",
+        "closure_certificate",
+        "kyc_document"
+      ]
+    },
+    "public.employment_type": {
+      "name": "employment_type",
+      "schema": "public",
+      "values": [
+        "salaried",
+        "self_employed",
+        "other"
+      ]
+    },
+    "public.entry_direction": {
+      "name": "entry_direction",
+      "schema": "public",
+      "values": [
+        "debit",
+        "credit"
+      ]
+    },
+    "public.integration_mode": {
+      "name": "integration_mode",
+      "schema": "public",
+      "values": [
+        "mock",
+        "sandbox",
+        "live"
+      ]
+    },
+    "public.ledger_account_type": {
+      "name": "ledger_account_type",
+      "schema": "public",
+      "values": [
+        "asset",
+        "liability",
+        "income",
+        "expense",
+        "equity"
+      ]
+    },
+    "public.lender_status": {
+      "name": "lender_status",
+      "schema": "public",
+      "values": [
+        "onboarding",
+        "active",
+        "suspended",
+        "terminated"
+      ]
+    },
+    "public.loan_account_status": {
+      "name": "loan_account_status",
+      "schema": "public",
+      "values": [
+        "active",
+        "cooling_off",
+        "overdue",
+        "closed",
+        "foreclosed",
+        "cancelled_in_cooling_off",
+        "written_off",
+        "restructured"
+      ]
+    },
+    "public.mandate_status": {
+      "name": "mandate_status",
+      "schema": "public",
+      "values": [
+        "created",
+        "pending_auth",
+        "active",
+        "paused",
+        "revoked",
+        "failed"
+      ]
+    },
+    "public.notification_channel": {
+      "name": "notification_channel",
+      "schema": "public",
+      "values": [
+        "sms",
+        "email",
+        "whatsapp",
+        "in_app",
+        "push"
+      ]
+    },
+    "public.notification_status": {
+      "name": "notification_status",
+      "schema": "public",
+      "values": [
+        "queued",
+        "sent",
+        "delivered",
+        "failed",
+        "suppressed"
+      ]
+    },
+    "public.offer_status": {
+      "name": "offer_status",
+      "schema": "public",
+      "values": [
+        "generated",
+        "viewed",
+        "accepted",
+        "expired",
+        "withdrawn"
+      ]
+    },
+    "public.repayment_channel": {
+      "name": "repayment_channel",
+      "schema": "public",
+      "values": [
+        "upi_collect",
+        "upi_intent",
+        "payment_link",
+        "nach",
+        "upi_autopay",
+        "netbanking",
+        "manual"
+      ]
+    },
+    "public.repayment_status": {
+      "name": "repayment_status",
+      "schema": "public",
+      "values": [
+        "initiated",
+        "pending",
+        "success",
+        "failed",
+        "refunded"
+      ]
+    },
+    "public.repayment_type": {
+      "name": "repayment_type",
+      "schema": "public",
+      "values": [
+        "bullet",
+        "instalment"
+      ]
+    },
+    "public.risk_band": {
+      "name": "risk_band",
+      "schema": "public",
+      "values": [
+        "low",
+        "medium",
+        "high",
+        "fraud_suspected",
+        "affordability_failure"
+      ]
+    },
+    "public.schedule_status": {
+      "name": "schedule_status",
+      "schema": "public",
+      "values": [
+        "upcoming",
+        "due",
+        "partially_paid",
+        "paid",
+        "overdue",
+        "waived"
+      ]
+    },
+    "public.verification_status": {
+      "name": "verification_status",
+      "schema": "public",
+      "values": [
+        "initiated",
+        "pending",
+        "verified",
+        "failed",
+        "expired",
+        "manual_review"
+      ]
+    },
+    "public.verification_type": {
+      "name": "verification_type",
+      "schema": "public",
+      "values": [
+        "pan",
+        "aadhaar_offline_xml",
+        "aadhaar_digilocker",
+        "aadhaar_ekyc_otp",
+        "video_kyc",
+        "ckyc",
+        "document",
+        "penny_drop",
+        "reverse_penny_drop"
+      ]
+    }
+  },
+  "schemas": {},
+  "views": {},
+  "sequences": {},
+  "roles": {},
+  "policies": {},
+  "_meta": {
+    "columns": {},
+    "schemas": {},
+    "tables": {}
+  }
+}

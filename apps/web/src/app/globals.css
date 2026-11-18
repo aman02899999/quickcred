@@ -1,0 +1,15 @@
+@import "tailwindcss";
+
+/* QuickCred design tokens (Phase 1 expands these into the full design system). */
+@theme {
+  --color-navy-900: #0b1b3f;
+  --color-royal-600: #2350d8;
+  --color-teal-500: #14b8a6;
+  --color-offwhite: #f7f8fa;
+  --color-charcoal: #1f2933;
+  --color-success: #16a34a;
+  --color-warning: #d97706;
+  --color-error: #dc2626;
+}
+
+body { background: var(--color-offwhite); color: var(--color-charcoal); }
